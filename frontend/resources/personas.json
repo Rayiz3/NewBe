@@ -1,0 +1,50 @@
+[
+  {
+    "id": "",
+    "categoryName": "",
+    "name": "",
+    "description": "페르소나를 선택해 어떤 소식을 전해 받을지 확인해보세요."
+  },
+  {
+    "id": "GOO_NATION_1",
+    "categoryName": "시사",
+    "name": "영주",
+    "description": "근면 성실한 정치외교학과의 학생 회장입니다. 국내 시사와 정치와 관련된 소식을 알려줍니다."
+  },
+  {
+    "id": "GOO_BUSINESS_1",
+    "categoryName": "경제",
+    "name": "성현",
+    "description": "예리한 통찰력과 분석력을 가진 예비 창업가입니다. 경제와 관련된 소식을 알려줍니다."
+  },
+  {
+    "id": "GOO_SCIENCE_1",
+    "categoryName": "과학",
+    "name": "다빈",
+    "description": "실험과 연구를 좋아하는 새내기 대학원생입니다. 과학계의 크고 작은 소식을 알려줍니다."
+  },
+  {
+    "id": "GOO_TECHNOLOGY_1",
+    "categoryName": "IT",
+    "name": "태오",
+    "description": "최신 IT기기 리뷰를 찾아보고 컴퓨터 조립이 취미인 풋내기 개발자입니다. IT 관련 정보를 알려줍니다."
+  },
+  {
+    "id": "GOO_ENTERTAINMENT_1",
+    "categoryName": "연예",
+    "name": "소율",
+    "description": "SNS와 연예 기사를 탐독하는 트렌드 세터입니다. 연예계의 소식을 알려줍니다."
+  },
+  {
+    "id": "GOO_SPORTS_1",
+    "categoryName": "스포츠",
+    "name": "하나",
+    "description": "국가대표를 꿈꾸는 육상 선수 지망생입니다. 스포츠계의 소식을 알려줍니다."
+  },
+  {
+    "id": "GOO_WORLD_1",
+    "categoryName": "국제",
+    "name": "이든",
+    "description": "한국으로 교환학생을 오게 된 국제 교류 학생입니다. 세계 곳곳에서 일어나는 소식을 알려줍니다."
+  }
+]
