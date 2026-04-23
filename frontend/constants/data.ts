@@ -1,6 +1,8 @@
 export const GOOGLE_WEB_CLIENT_ID = "266802328663-qiphs0b03q8s3p3p7bdpuvesg0ra05li.apps.googleusercontent.com";
 export const GOOLGE_ANDROID_CLIENT_ID = "266802328663-op50o3janon34neph3repuuqlfdd4jn2.apps.googleusercontent.com"
-export const LINK_SERVER = "http://172.30.1.83:8000"
+export const LINK_SERVER = "https://newbe.fly.dev"
+export const LINK_LOCAL = "http://172.30.1.83:8000"
+
 
 export const IMAGES: { [key: string]: { [key: string]: any } } = {
   "DEFAULT": {

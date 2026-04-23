@@ -4,7 +4,7 @@ from app.services.services import get_langgraph_news
 
 news_router = APIRouter()
 
-@news_router.get("/")
+@news_router.get("")
 async def get_news():
     await db_delete_news_expired()
 
