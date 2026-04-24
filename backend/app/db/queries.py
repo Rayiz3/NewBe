@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 import os
+from zoneinfo import ZoneInfo
 import asyncpg
 from datetime import date, datetime, timedelta
 from dotenv import load_dotenv
@@ -14,6 +15,7 @@ from app.db.schemas import SummaryResponseSchema
 
 load_dotenv()
 
+KST = ZoneInfo("Asia/Seoul")
 DATABASE_URL = os.getenv("DATABASE_URL")
 pool = None
 
@@ -22,7 +24,8 @@ pool = None
 scheduler = AsyncIOScheduler(timezone="Asia/Seoul")
 
 async def daily_news_job():
-    print(f"[Scheduler] running daily job at {datetime.today().strftime("%Y-%m-%d %H:%M:%S")}...")
+    today = datetime.now(KST).date()
+    print(f"[Scheduler] running daily job at {today.strftime("%Y-%m-%d %H:%M:%S")}...")
     await db_delete_news_expired()
     news = await get_langgraph_news()
     await db_save_news(news)
@@ -115,7 +118,7 @@ async def db_save_news(news: dict[str, SummaryResponseSchema]) -> None:
     values = [(item.persona_id,
                item.title,
                item.category,
-               datetime.fromisoformat(item.published).date(),
+               datetime.fromisoformat(item.published).astimezone(KST).date(),
                item.source,
                item.news_url,
                item.content,
@@ -130,7 +133,7 @@ async def db_save_news(news: dict[str, SummaryResponseSchema]) -> None:
 async def db_delete_news_expired() -> None:
     pool = await get_pool()
 
-    cutoff_day = date.today() - timedelta(days=Config.TTL)
+    cutoff_day = datetime.now(KST).date() - timedelta(days=Config.TTL)
 
     query = """
     DELETE
