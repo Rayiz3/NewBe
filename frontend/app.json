@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "NewBe",
+    "name": "뉴비",
     "slug": "NewBe",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -45,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2287322a-efef-473a-9c01-9b43e894b2ad"
+      }
     }
   }
 }
