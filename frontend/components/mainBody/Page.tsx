@@ -1,3 +1,4 @@
+import { IMAGES } from "@/constants/data";
 import { scale, screen, space } from "@/constants/sizes";
 import personas from '@/resources/personas.json';
 import { summaryType } from "@/systems/request";
@@ -62,12 +63,12 @@ export default function Page({session, idx}: Props) {
             <Content content={session.content} animatedStyle={contentAnimatedStyle}/>
             <TailImage animatedStyle={contentAnimatedStyle} />
             <Animated.Image 
-                source={require('../../assets/images/sample_figure.png')} 
+                source={IMAGES[session.personaId]["STAND"]} 
                 style={[styles.figure, animatedStyle]} 
                 resizeMode="contain" 
             />
             <Image
-                source={require('../../assets/images/sample_background.png')} 
+                source={IMAGES[session.personaId]["BACKGROUND"]} 
                 style={styles.background} 
                 resizeMode="contain" 
             />

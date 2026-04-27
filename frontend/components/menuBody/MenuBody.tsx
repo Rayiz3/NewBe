@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         fontFamily: "Pretendard",
         fontSize: fontSize.menuTitle2,
         fontWeight: "600",
-        marginVertical: scale(72),
+        marginVertical: scale(172),
     },
     highlight: {
         fontWeight: "700",
