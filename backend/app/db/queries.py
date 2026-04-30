@@ -21,7 +21,14 @@ pool = None
 
 # scheduling for daily task #
 
-scheduler = AsyncIOScheduler(timezone="Asia/Seoul")
+scheduler = AsyncIOScheduler(
+    timezone="Asia/Seoul",
+    job_defaults={
+        "misfire_grace_time": 60 * 30,
+        "coalesce": True,
+        "max_instances": 1,
+    },
+)
 
 async def daily_news_job():
     today = datetime.now(KST).date()
