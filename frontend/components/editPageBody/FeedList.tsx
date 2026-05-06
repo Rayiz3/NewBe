@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: scale(36),
+    gap: scale(32),
     width: "100%",
     height: scale(180),
     backgroundColor: colors.secondary,

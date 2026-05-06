@@ -20,8 +20,8 @@ export const space = {
     mainPadding: scale(60),
     contentPadding: scale(40),
     menuHeaderHeight: scale(326),
-    menuTokenSize: scale(144),
-    feedTokenSize: scale(88),
+    menuTokenSize: scale(160),
+    feedTokenSize: scale(96),
     mainIconSize: scale(88),
     menuIconSize: scale(108),
 }

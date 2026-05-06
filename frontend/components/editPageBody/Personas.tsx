@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    gap: scale(96),
+    gap: scale(88),
   },
   instruction: {
     position: 'absolute',
