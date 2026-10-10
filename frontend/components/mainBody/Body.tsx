@@ -1,9 +1,10 @@
 import { screen } from "@/constants/sizes";
+import { colors } from "@/constants/colors";
 import { usePersonaStore } from "@/systems/persona";
 import { useRequestStore } from "@/systems/request";
 import { useScrollStore } from "@/systems/scroll";
 import { useEffect } from "react";
-import { NativeScrollEvent, NativeSyntheticEvent, ScrollView } from "react-native";
+import { ActivityIndicator, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View } from "react-native";
 import Page from "./Page";
 
 
@@ -21,16 +22,15 @@ export default function Body() {
 
     useEffect(() => {
         getSummaries();
-    }, []);
-
-    /*
-    useEffect(() => {
-        console.log(summaries);
-    }, [summaries]);
-    */
+    }, [getSummaries]);
    
     return (
-        <>{ (Object.keys(summaries).length > 0) &&
+        <>{isLoading ? (
+            <View style={styles.loading} accessibilityRole="progressbar"
+                accessibilityLabel="뉴스를 불러오는 중" accessibilityState={{ busy: true }}>
+                <ActivityIndicator size="large" color={colors.highlight} />
+            </View>
+        ) : (
         <ScrollView
         horizontal
         pagingEnabled
@@ -49,7 +49,16 @@ export default function Body() {
                     />
                 );
             })}
-        </ScrollView>}</>
+        </ScrollView>
+        )}</>
     )
 }
-// PERSONAS.getSummary(personaId)
+const styles = StyleSheet.create({
+    loading: {
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.white,
+    },
+});

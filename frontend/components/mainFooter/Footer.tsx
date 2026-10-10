@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     width: screen.width,
     height: scale(270),
     paddingHorizontal: space.mainPadding,
-    backgroundColor: colors.mainOpacity,
+    backgroundColor: '#ffffff',
     borderTopColor: colors.grayLight,
     borderTopWidth: space.borderWidth,
     zIndex: 10,

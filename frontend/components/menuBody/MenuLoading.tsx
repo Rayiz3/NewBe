@@ -1,15 +1,13 @@
 import { colors } from "@/constants/colors";
-import { fontSize, space } from "@/constants/sizes";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 
 export default function MenuLoading() {
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>
-                불러오는 중...
-            </Text>
+        <View style={styles.container} accessibilityRole="progressbar"
+            accessibilityLabel="로그인 중" accessibilityState={{ busy: true }}>
+            <ActivityIndicator size="large" color={colors.highlight} />
         </View>
     )
 }
@@ -20,15 +18,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: space.contentPadding,
         width: "100%",
-        height: "100%",
-    },
-    title: {
-        color: colors.black,
-        fontSize: fontSize.menuTitle2,
-        fontFamily: "Pretendard",
-        fontWeight: "500",
-        textAlign: "center",
+        backgroundColor: colors.white,
     }
 })
