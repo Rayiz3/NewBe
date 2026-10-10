@@ -1,7 +1,7 @@
 import { GOOGLE_WEB_CLIENT_ID } from "@/constants/data";
 import { signInWithGoogle, useAccountStore } from "@/systems/account";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Alert, Pressable, StyleSheet, Text } from "react-native";
 import { GoogleIcon } from "../Icons";
 
 
@@ -17,12 +17,21 @@ export default function GoogleLoginButton() {
     const setUserName = useAccountStore(s => s.setUserName);
 
     const handlePress = async () => {
+        if (useAccountStore.getState().isLoading) return;
         setIsLoading(true);
-        const res = await signInWithGoogle();
-        setIsLoading(false);
-        setIsLogin(true);
-        setUserName(res.profile?.name ?? "사용자");
-        console.log(`${res.profile?.email ?? "none"}, idToken: ${res.idToken.slice(0, 50)}...`)
+        try {
+            const res = await signInWithGoogle();
+            if (!res) return;
+            setUserName(res.profile?.name ?? "사용자");
+            setIsLogin(true);
+        } catch (error) {
+            Alert.alert(
+                "로그인 실패",
+                error instanceof Error ? error.message : "로그인하지 못했습니다. 다시 시도해 주세요."
+            );
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (

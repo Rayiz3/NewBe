@@ -27,6 +27,7 @@ export async function signInWithGoogle() {
 
     await GoogleSignin.hasPlayServices();
     const result = await GoogleSignin.signIn();
+    if (result.type === 'cancelled') return null;
     const idToken = result.data?.idToken;
 
     if (!idToken) {
@@ -38,14 +39,14 @@ export async function signInWithGoogle() {
         provider: 'google',
         token: idToken
     })
-    if (!data.user) {
-        throw new Error(`Authenciation failed: ${error?.message}`);
+    if (error || !data.user) {
+        throw new Error(`구글 계정 인증 실패: ${error?.message ?? '사용자 정보가 없습니다.'}`);
     }
 
     // get authorized user
     const { data: authUserData, error: authUserError } = await supabase.auth.getUser();
-    if (!authUserData.user) {
-        throw new Error("Authenticated user is not available.");
+    if (authUserError || !authUserData.user) {
+        throw new Error(`사용자 인증 확인 실패: ${authUserError?.message ?? '사용자 정보가 없습니다.'}`);
     }
     const authUser = authUserData.user;
 
@@ -55,12 +56,11 @@ export async function signInWithGoogle() {
         email: authUser.email,
         name: authUser.user_metadata?.full_name,
     }).select();
+    if (upsertError) {
+        throw new Error(`사용자 정보 저장 실패: ${upsertError.message}`);
+    }
     setUserId(authUser.id);
     setFeed((upsertData?.[0]?.feed ?? []) as string[]);
-
-    if (upsertError) {
-        throw new Error(`Upsertion failed: ${error?.message}`);
-    }
 
     return { idToken, profile: result.data?.user }
 }
