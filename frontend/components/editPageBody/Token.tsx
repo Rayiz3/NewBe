@@ -2,8 +2,7 @@ import { IMAGES } from "@/constants/data"
 import { colors } from "@/constants/colors"
 import { fontSize, scale, space } from "@/constants/sizes"
 import personas from "@/resources/personas.json"
-import { usePersonaStore } from "@/systems/persona"
-import { useEffect, useRef } from "react"
+import { usePersonaToken } from "@/systems/persona"
 import { Image, Pressable, StyleSheet, Text, View } from "react-native"
 
 type Props = {
@@ -14,42 +13,15 @@ type Props = {
 
 export default function Token({personaId, location, index=-1}: Props) {
     const persona = personas.find(p => p.id === personaId);
-    const feed = usePersonaStore(s => s.feed);
-    const curPersona = usePersonaStore(s => s.curPersona);
-    const setCurPersona = usePersonaStore(s => s.setCurPersona);
-    const setIsDragging = usePersonaStore(s => s.setIsDragging);
-    const setDrag = usePersonaStore(s => s.setDrag);
-    const setFeedPosX = usePersonaStore(s => s.setFeedPosX);
-    const feedPosX = usePersonaStore(s => s.feedPosX);
-
-    const tokenRef = useRef<View>(null);
-
-    const handleLongPressOn = () => {
-        setIsDragging(location);
-    }
-
-    const handlePressOn = (id: string) => {
-        setCurPersona(id);
-        tokenRef.current?.measureInWindow((x, y, w, h) => {
-            setDrag(x + w/4, y + h);
-        });
-    };
-
-    useEffect(() => {
-        if (location == 'feed' && index >= 0) {
-            tokenRef.current?.measureInWindow((x, y, w, h) => {
-                setFeedPosX(x + w/2, index)
-            });
-        };
-    }, [feed]);
+    const { tokenRef, curPersona, select, startDragging } = usePersonaToken(personaId, location, index);
 
     return (
         <Pressable
             key={`${location}-${personaId}`}
             style={location==="persona"? styles.personaWrapper : styles.tokenWrapper}
             delayLongPress={400}
-            onPressIn={() => handlePressOn(personaId)}
-            onLongPress={() => handleLongPressOn()}>
+            onPressIn={select}
+            onLongPress={startDragging}>
             <View ref={tokenRef}>
                 <Image
                     source={IMAGES[personaId][personaId === curPersona? "TOKEN_SELECT" : "TOKEN"]}

@@ -1,6 +1,6 @@
 import { colors } from "@/constants/colors";
 import { fontSize, scale, space } from "@/constants/sizes";
-import { useRouter } from "expo-router";
+import { goBack } from "@/systems/navigation";
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GoBackIcon } from "./Icons";
 
@@ -9,12 +9,6 @@ type Props = {
 }
 
 export default function MenuHeader({name}: Props) {
-    const router = useRouter();
-
-    const handleBack = () => {
-        router.back();
-    }
-
     return (
         <View style={styles.container}>
             <StatusBar
@@ -24,7 +18,7 @@ export default function MenuHeader({name}: Props) {
             <TouchableOpacity
                 style={styles.sideButton}
                 activeOpacity={0.7}
-                onPress={handleBack}
+                onPress={goBack}
                 hitSlop={{ top: scale(12), bottom: scale(12), left: scale(12), right: scale(12) }}>
                 <GoBackIcon />
             </TouchableOpacity>

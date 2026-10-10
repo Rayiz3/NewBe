@@ -1,7 +1,11 @@
+import { GOOGLE_WEB_CLIENT_ID } from "@/constants/data";
+import { Alert } from "react-native";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { createClient } from '@supabase/supabase-js';
 import { create } from "zustand";
 import { usePersonaStore } from "./persona";
+
+GoogleSignin.configure({ webClientId: GOOGLE_WEB_CLIENT_ID, offlineAccess: true });
 
 const supabase = createClient(
     process.env.EXPO_PUBLIC_SUPABASE_URL!,
@@ -66,6 +70,7 @@ export async function signInWithGoogle() {
 }
 
 interface AccountProps {
+    login: () => Promise<void>;
     isLogin: boolean
     setIsLogin: (v: boolean) => void
 
@@ -80,6 +85,18 @@ interface AccountProps {
 }
 
 export const useAccountStore = create<AccountProps>((set, get) => ({
+    login: async () => {
+        if (get().isLoading) return;
+        set({ isLoading: true });
+        try {
+            const result = await signInWithGoogle();
+            if (result) set({ userName: result.profile?.name ?? '사용자', isLogin: true });
+        } catch (error) {
+            Alert.alert('로그인 실패', error instanceof Error ? error.message : '로그인하지 못했습니다. 다시 시도해 주세요.');
+        } finally {
+            set({ isLoading: false });
+        }
+    },
     isLogin: false,
     setIsLogin: (v) => set({ isLogin: v }),
 
@@ -92,3 +109,13 @@ export const useAccountStore = create<AccountProps>((set, get) => ({
     userName: "",
     setUserName: (v) => set({ userName: v}),
 }));
+
+export async function saveCurrentFeed() {
+    const { userId, isLogin } = useAccountStore.getState();
+    if (!userId || !isLogin) return;
+    try {
+        await updateFeed();
+    } catch (error) {
+        Alert.alert('피드 저장 실패', error instanceof Error ? error.message : '피드를 저장하지 못했습니다.');
+    }
+}

@@ -1,6 +1,6 @@
 import { colors } from "@/constants/colors";
 import { fontSize, scale } from "@/constants/sizes";
-import { useRouter } from "expo-router";
+import { openMainMenu } from "@/systems/navigation";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { EditIcon, MenuIcon } from "../Icons";
 
@@ -11,18 +11,8 @@ type Props = {
 }
 
 export default function NavigationButton({name, side}: Props) {
-    const router = useRouter();
-
-    const handlePress = () => {
-        if (name === "편집") {
-            router.push(`/edit-page`);
-        } else {
-            router.push(`/menu-page`);
-        }
-    };
-
     return (
-      <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={handlePress}>
+      <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={() => openMainMenu(name)}>
         {side === "L"
           ? <EditIcon />
           : <MenuIcon />}

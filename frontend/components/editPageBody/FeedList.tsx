@@ -1,28 +1,12 @@
 import { colors } from "@/constants/colors";
 import { fontSize, scale, screen, space } from "@/constants/sizes";
-import { usePersonaStore } from "@/systems/persona";
-import { useEffect, useRef } from "react";
+import { usePersonaDropZone, usePersonaStore } from "@/systems/persona";
 import { StyleSheet, Text, View } from "react-native";
 import Token from "./Token";
 
 export default function FeedList() {
   const feed = usePersonaStore(s => s.feed);
-  const setDropZone = usePersonaStore(s => s.setDropZoneFeed);
-  const cardContainerRef = useRef<View>(null);
-
-  const measureDropZone = () => {
-    cardContainerRef.current?.measureInWindow((x, y, w, h) => {
-      setDropZone(x, y, w, h);
-    });
-  };
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      measureDropZone();
-    });
-
-    return () => cancelAnimationFrame(id);
-  }, []);
+  const { cardContainerRef, measureDropZone } = usePersonaDropZone("feed");
 
   return (
     <View style={styles.container}>

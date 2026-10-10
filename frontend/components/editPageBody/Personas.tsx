@@ -3,31 +3,15 @@ import { fontSize, scale, screen, space } from "@/constants/sizes";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import personas from '@/resources/personas.json';
-import { usePersonaStore } from "@/systems/persona";
-import { useEffect, useRef } from "react";
+import { usePersonaDropZone, usePersonaStore } from "@/systems/persona";
 import Token from "./Token";
 
 export default function Personas() {
   const isDragging = usePersonaStore(s => s.isDragging);
-  const setDropZone = usePersonaStore(s => s.setDropZonePersona);
-  const cardContainerRef = useRef<View>(null);
-
-  const measureDropZone = () => {
-    cardContainerRef.current?.measureInWindow((x, y, w, h) => {
-      setDropZone(x, y, w, h);
-    });
-  };
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      measureDropZone();
-    });
-
-    return () => cancelAnimationFrame(id);
-  }, []);
+  const { cardContainerRef, measureDropZone } = usePersonaDropZone("persona");
 
   return (
-    <View style={styles.container} ref={cardContainerRef}>
+    <View style={styles.container} ref={cardContainerRef} onLayout={measureDropZone}>
         <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles.scroll}>

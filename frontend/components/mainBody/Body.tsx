@@ -1,10 +1,9 @@
-import { screen } from "@/constants/sizes";
 import { colors } from "@/constants/colors";
 import { usePersonaStore } from "@/systems/persona";
 import { useRequestStore } from "@/systems/request";
-import { useScrollStore } from "@/systems/scroll";
+import { handlePageScroll } from "@/systems/scroll";
 import { useEffect } from "react";
-import { ActivityIndicator, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import Page from "./Page";
 
 
@@ -14,12 +13,6 @@ export default function Body() {
     const getSummaries = useRequestStore(s => s.getSummaries);
     const feed = usePersonaStore(s => s.feed);
     
-    const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offset = e.nativeEvent.contentOffset.x;
-        const pageIndex = Math.round(offset / screen.width);
-        useScrollStore.getState().setCurPage(pageIndex);
-    };
-
     useEffect(() => {
         getSummaries();
     }, [getSummaries]);
@@ -36,7 +29,7 @@ export default function Body() {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         bounces={true}
-        onMomentumScrollEnd={handleScroll}>
+        onMomentumScrollEnd={handlePageScroll}>
             {feed.map((personaId, idx) => {
                 const session = summaries[personaId];
                 if (!session) return null;

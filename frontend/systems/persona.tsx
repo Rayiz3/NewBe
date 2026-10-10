@@ -1,5 +1,6 @@
 import { screen } from "@/constants/sizes";
-import { PanResponder, PanResponderInstance } from "react-native";
+import { useEffect, useRef } from "react";
+import { PanResponder, PanResponderInstance, View } from "react-native";
 import { create } from "zustand";
 
 type dragSourceType = 'feed' | 'persona' | null;
@@ -181,3 +182,46 @@ export const usePersonaStore = create<PersonaProps>((set, get) => ({
         return len;
     },
 }));
+// Native view refs remain in hooks; persona state stays in the store.
+export function usePersonaToken(personaId: string, location: 'feed' | 'persona', index: number) {
+    const tokenRef = useRef<View>(null);
+    const feed = usePersonaStore(s => s.feed);
+    const curPersona = usePersonaStore(s => s.curPersona);
+    useEffect(() => {
+        if (location === 'feed' && index >= 0) {
+            tokenRef.current?.measureInWindow((x, _y, width) => {
+                usePersonaStore.getState().setFeedPosX(x + width / 2, index);
+            });
+        }
+    }, [feed, location, index]);
+    const select = () => {
+        usePersonaStore.getState().setCurPersona(personaId);
+        tokenRef.current?.measureInWindow((x, y, width, height) => {
+            usePersonaStore.getState().setDrag(x + width / 4, y + height);
+        });
+    };
+    const startDragging = () => usePersonaStore.getState().setIsDragging(location);
+    return { tokenRef, curPersona, select, startDragging };
+}
+
+export function usePersonaDropZone(location: 'feed' | 'persona') {
+    const cardContainerRef = useRef<View>(null);
+    const measureDropZone = () => {
+        cardContainerRef.current?.measureInWindow((x, y, width, height) => {
+            const state = usePersonaStore.getState();
+            const setZone = location === 'feed' ? state.setDropZoneFeed : state.setDropZonePersona;
+            setZone(x, y, width, height);
+        });
+    };
+    useEffect(() => {
+        const frame = requestAnimationFrame(() => {
+            cardContainerRef.current?.measureInWindow((x, y, width, height) => {
+                const state = usePersonaStore.getState();
+                const setZone = location === 'feed' ? state.setDropZoneFeed : state.setDropZonePersona;
+                setZone(x, y, width, height);
+            });
+        });
+        return () => cancelAnimationFrame(frame);
+    }, [location]);
+    return { cardContainerRef, measureDropZone };
+}
