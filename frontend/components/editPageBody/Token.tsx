@@ -1,8 +1,10 @@
 import { IMAGES } from "@/constants/data"
-import { space } from "@/constants/sizes"
+import { colors } from "@/constants/colors"
+import { fontSize, scale, space } from "@/constants/sizes"
+import personas from "@/resources/personas.json"
 import { usePersonaStore } from "@/systems/persona"
 import { useEffect, useRef } from "react"
-import { Image, Pressable, StyleSheet, View } from "react-native"
+import { Image, Pressable, StyleSheet, Text, View } from "react-native"
 
 type Props = {
     personaId: string
@@ -11,6 +13,7 @@ type Props = {
 }
 
 export default function Token({personaId, location, index=-1}: Props) {
+    const persona = personas.find(p => p.id === personaId);
     const feed = usePersonaStore(s => s.feed);
     const curPersona = usePersonaStore(s => s.curPersona);
     const setCurPersona = usePersonaStore(s => s.setCurPersona);
@@ -53,6 +56,9 @@ export default function Token({personaId, location, index=-1}: Props) {
                     style={location==="persona"? styles.persona : styles.token}
                     resizeMode="contain" />
             </View>
+            {location === 'persona' && (
+                <Text style={styles.caption}>{persona?.categoryName}</Text>
+            )}
         </Pressable>
     )
 }
@@ -60,9 +66,15 @@ export default function Token({personaId, location, index=-1}: Props) {
 const styles = StyleSheet.create({
   personaWrapper: {
     width: space.menuTokenSize,
-    height: space.menuTokenSize,
     justifyContent: "center",
     alignItems: "center",
+    gap: scale(12),
+  },
+  caption: {
+    color: colors.black,
+    fontSize: fontSize.menuBody,
+    fontWeight: "500",
+    textAlign: "center",
   },
   persona: {
     width: space.menuTokenSize,

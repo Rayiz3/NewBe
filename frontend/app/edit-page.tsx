@@ -47,6 +47,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         width: "100%",
         height: "100%",
-        backgroundColor: colors.white,
+        backgroundColor: '#ffffff',
     }
 })

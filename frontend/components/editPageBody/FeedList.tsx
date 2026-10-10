@@ -26,7 +26,12 @@ export default function FeedList() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>피드 목록</Text>
+      <View style={styles.heading}>
+        <Text style={styles.title}>피드 목록</Text>
+        <Text style={styles.count} accessibilityLiveRegion="polite">
+          {feed.length} / 7
+        </Text>
+      </View>
       
       <View
         style={styles.cardContainer}
@@ -47,16 +52,30 @@ export default function FeedList() {
 const styles = StyleSheet.create({
   container: {
     width: screen.width,
-    marginTop: scale(24),
-    marginBottom: scale(24),
+    paddingTop: scale(24),
+    paddingBottom: scale(24),
     paddingHorizontal: space.mainPadding,
+    backgroundColor: '#ffffff',
+    borderTopColor: colors.grayLight,
+    borderTopWidth: space.borderWidth,
+  },
+  heading: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: scale(20),
+    marginBottom: scale(20),
   },
   title: {
     color: colors.black,
     fontSize: fontSize.menuTitle2,
     fontWeight: "700",
-    textAlign: "center",
-    marginBottom: scale(20),
+  },
+  count: {
+    color: colors.black,
+    fontSize: fontSize.menuBody,
+    textAlign: "right",
+    fontVariant: ['tabular-nums'],
   },
   cardContainer: {
     flexDirection: "row",
@@ -65,7 +84,6 @@ const styles = StyleSheet.create({
     gap: scale(32),
     width: "100%",
     height: scale(180),
-    backgroundColor: colors.secondary,
     borderRadius: scale(15),
     paddingHorizontal: space.mainPadding,
   },
