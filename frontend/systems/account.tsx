@@ -119,3 +119,10 @@ export async function saveCurrentFeed() {
         Alert.alert('피드 저장 실패', error instanceof Error ? error.message : '피드를 저장하지 못했습니다.');
     }
 }
+
+export async function getAccountAccessToken() {
+    if (!useAccountStore.getState().isLogin) throw new Error('로그인 후 스크랩할 수 있어요.');
+    const { data, error } = await supabase.auth.getSession();
+    if (error || !data.session) throw new Error('다시 로그인해주세요.');
+    return data.session.access_token;
+}

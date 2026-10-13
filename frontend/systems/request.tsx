@@ -3,6 +3,7 @@ import { Alert, Linking } from "react-native";
 import { create } from "zustand";
 
 export interface summaryType {
+    summaryId?: string | null;
     personaId: string;
     title: string;
     category: string;

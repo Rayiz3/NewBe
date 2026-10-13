@@ -85,7 +85,7 @@ async def db_fetch_news() -> dict[str, SummaryResponseSchema]:
     pool = await get_pool()
 
     query = """
-    SELECT persona_id, title, category, published, source, news_url, content
+    SELECT summary_id, persona_id, title, category, published, source, news_url, content
     FROM summaries
     WHERE published = $1
     """
@@ -96,6 +96,7 @@ async def db_fetch_news() -> dict[str, SummaryResponseSchema]:
 
     return { row["persona_id"]:
         SummaryResponseSchema(
+            summary_id=row["summary_id"],
             persona_id=row["persona_id"],
             title=row["title"],
             category=row["category"],
@@ -120,6 +121,7 @@ async def db_save_news(news: dict[str, SummaryResponseSchema]) -> None:
         source = EXCLUDED.source,
         news_url = EXCLUDED.news_url,
         content = EXCLUDED.content
+    RETURNING summary_id
     """
 
     values = [(item.persona_id,
@@ -133,7 +135,8 @@ async def db_save_news(news: dict[str, SummaryResponseSchema]) -> None:
 
     async with pool.acquire() as conn:
         async with conn.transaction():  # atomicity
-            await conn.executemany(query, values)  # bulk execution
+            for item, value in zip(news.values(), values):
+                item.summary_id = await conn.fetchval(query, *value)
         print("[DB] upload completed")
 
 ''' delete expired news from db '''

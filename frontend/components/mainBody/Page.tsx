@@ -1,11 +1,10 @@
 import { IMAGES } from "@/constants/data";
-import { colors } from "@/constants/colors";
-import { fontSize, scale, screen, space } from "@/constants/sizes";
+import { scale, screen, space } from "@/constants/sizes";
 import personas from '@/resources/personas.json';
-import { isNewsUrlValid, useRequestStore, summaryType } from "@/systems/request";
+import { summaryType } from "@/systems/request";
 import { useScrollStore } from "@/systems/scroll";
 import { useEffect } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import { TailImage } from "../Icons";
 import Content from "./Content";
@@ -22,10 +21,6 @@ export default function Page({session, idx}: Props) {
     const persona = personas.find(p => p.id === session.personaId);
     const progress = useSharedValue(0);
     const progressContent = useSharedValue(0);
-    const isOpening = useRequestStore(s => s.openingPersonaId === session.personaId);
-    const openOriginalNews = useRequestStore(s => s.openOriginalNews);
-    const hasNewsUrl = isNewsUrlValid(session.newsUrl);
-
     useEffect(() => {
         progress.value = 0;
         progressContent.value = 0;
@@ -64,7 +59,7 @@ export default function Page({session, idx}: Props) {
     return (
         <View key={`page-${idx}`} style={styles.container}>
             <Title title={persona?.categoryName || ""} category={session.category}/>
-            <Content content={session.content} animatedStyle={contentAnimatedStyle}/>
+            <Content session={session} animatedStyle={contentAnimatedStyle}/>
             <TailImage animatedStyle={contentAnimatedStyle} />
             <Animated.Image 
                 source={IMAGES[session.personaId]["STAND"]} 
@@ -76,46 +71,12 @@ export default function Page({session, idx}: Props) {
                 style={styles.background} 
                 resizeMode="contain" 
             />
-            <Pressable
-                accessibilityRole="link"
-                accessibilityLabel="원문 보기"
-                accessibilityHint={hasNewsUrl ? '브라우저에서 이 뉴스의 원문을 엽니다.' : '원문 링크가 제공되지 않았습니다.'}
-                accessibilityState={{ disabled: !hasNewsUrl || isOpening, busy: isOpening }}
-                disabled={!hasNewsUrl || isOpening}
-                onPress={() => openOriginalNews(session.personaId)}
-                style={({ pressed }) => [styles.sourceButton, pressed && styles.sourceButtonPressed,
-                    (!hasNewsUrl || isOpening) && styles.sourceButtonDisabled]}>
-                <Text style={styles.sourceButtonText}>원문 보기</Text>
-            </Pressable>
+
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    sourceButton: {
-        position: 'absolute',
-        left: space.mainPadding,
-        bottom: scale(302),
-        width: scale(340),
-        minHeight: 48,
-        paddingHorizontal: scale(32),
-        paddingVertical: scale(28),
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: scale(100),
-        backgroundColor: colors.light.backgroundOpacity,
-        zIndex: 2,
-    },
-    sourceButtonText: {
-        flexShrink: 1,
-        color: colors.main,
-        fontSize: fontSize.menuBody,
-        lineHeight: fontSize.menuBody * 1.45,
-        fontWeight: '700',
-        textAlign: 'center',
-    },
-    sourceButtonPressed: { opacity: 0.85 },
-    sourceButtonDisabled: { opacity: 0.6 },
     container: {
         flexDirection: "column",
         justifyContent: "flex-start",

@@ -17,6 +17,7 @@ async def get_news():
 
     
     response = { k: {
+            "summaryId": v.summary_id,
             "personaId": v.persona_id,
             "title": v.title,
             "category": v.category,

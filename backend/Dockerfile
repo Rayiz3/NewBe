@@ -9,7 +9,7 @@ RUN pip install uv
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 COPY . .
-RUN .venv/bin/pip install .
+# Run the application from /app; uv sync already installed its dependencies.
 FROM python:3.13-slim
 WORKDIR /app
 COPY --from=builder /app/.venv .venv/

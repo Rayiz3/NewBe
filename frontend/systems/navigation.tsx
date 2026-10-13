@@ -7,5 +7,6 @@ export function openMainMenu(name: string) {
 }
 export function runMenuAction(name: string) {
     if (name === '편집') router.push('/edit-page');
+    else if (name === '스크랩') router.push('/scrap-page');
     else if (name === '로그아웃') useAccountStore.getState().setIsLogin(false);
 }
