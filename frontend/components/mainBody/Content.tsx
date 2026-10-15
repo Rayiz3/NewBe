@@ -6,6 +6,7 @@ import { isNewsUrlValid, summaryType, useRequestStore } from "@/systems/request"
 import { LinkOriginIcon, ScrapIcon } from "../Icons";
 import Animated from "react-native-reanimated";
 import { useScrapStore } from "@/systems/scrap";
+import { useButtonScale } from "@/systems/buttonMotion";
 
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
 }
 
 const bubbleRadius = scale(100);
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function Content({session, animatedStyle}: Props) {
     const saveScrap = useScrapStore(s => s.save);
@@ -21,6 +23,10 @@ export default function Content({session, animatedStyle}: Props) {
     const isOpening = useRequestStore(s => s.openingPersonaId === session.personaId);
     const openOriginalNews = useRequestStore(s => s.openOriginalNews);
     const hasNewsUrl = isNewsUrlValid(session.newsUrl);
+    const originMotion = useButtonScale(!hasNewsUrl || isOpening);
+    const scrapDisabled = isSaving;
+    const scrapLabel = '스크랩';
+    const scrapMotion = useButtonScale(scrapDisabled);
     return (
         <Animated.View style={[styles.container, animatedStyle]}>
             <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}
@@ -28,7 +34,8 @@ export default function Content({session, animatedStyle}: Props) {
                 <Text style={[styles.content, shadowStyle]}>{session.content}</Text>
             </ScrollView>
             <View style={styles.actions}>
-            <Pressable style={styles.originRow} accessibilityRole="link"
+            <AnimatedPressable style={[styles.originRow, originMotion.animatedStyle]} accessibilityRole="link"
+                onPressIn={originMotion.enlarge} onPressOut={originMotion.restore}
                 accessibilityLabel="본문 보기"
                 accessibilityHint={hasNewsUrl ? '브라우저에서 뉴스 원문을 엽니다.' : '원문 링크가 제공되지 않았습니다.'}
                 accessibilityState={{ disabled: !hasNewsUrl || isOpening, busy: isOpening }}
@@ -36,13 +43,14 @@ export default function Content({session, animatedStyle}: Props) {
                 onPress={() => openOriginalNews(session.personaId)}>
                 <LinkOriginIcon />
                 <Text style={[styles.content, shadowStyle, styles.originText]}>본문 보기</Text>
-            </Pressable>
-            <Pressable style={styles.originRow} accessibilityRole="button"
-                accessibilityLabel="스크랩" accessibilityState={{ disabled: isSaving, busy: isSaving }}
-                disabled={isSaving} onPress={() => saveScrap(session)}>
+            </AnimatedPressable>
+            <AnimatedPressable style={[styles.originRow, scrapMotion.animatedStyle, scrapDisabled && { opacity: 0.5 }]} accessibilityRole="button"
+                onPressIn={scrapMotion.enlarge} onPressOut={scrapMotion.restore}
+                accessibilityLabel={scrapLabel} accessibilityState={{ disabled: scrapDisabled, busy: isSaving }}
+                disabled={scrapDisabled} onPress={() => saveScrap(session)}>
                 <ScrapIcon />
-                <Text style={[styles.content, shadowStyle, styles.originText]}>스크랩</Text>
-            </Pressable>
+                <Text style={[styles.content, shadowStyle, styles.originText]}>{scrapLabel}</Text>
+            </AnimatedPressable>
             </View>
         </Animated.View>
     )

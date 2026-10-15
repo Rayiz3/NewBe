@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.auth import current_user
-from app.db.scraps import delete_scraps, list_scraps, save_scrap
+from app.db.scraps import delete_scraps, list_scraps, save_scrap, scrap_status
 
 scraps_router = APIRouter()
 
@@ -20,6 +20,16 @@ class SaveScrap(BaseModel):
 class DeleteScraps(BaseModel):
     model_config = ConfigDict(extra="forbid")
     ids: list[UUID] = Field(min_length=1, max_length=100)
+
+
+class ScrapStatusRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    summary_ids: list[UUID] = Field(alias="summaryIds", min_length=1, max_length=100)
+
+
+@scraps_router.post("/status")
+async def get_scrap_status(body: ScrapStatusRequest, user_id: UUID = Depends(current_user)):
+    return {"items": await scrap_status(user_id, list(set(body.summary_ids)))}
 
 
 class Scrap(BaseModel):

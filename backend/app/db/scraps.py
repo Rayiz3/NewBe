@@ -3,6 +3,16 @@ from uuid import UUID
 from app.db.queries import get_pool
 
 
+async def scrap_status(user_id: UUID, summary_ids: list[UUID]):
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch("""
+            SELECT summary_id, id FROM public.scraps
+            WHERE user_id=$1 AND summary_id=ANY($2::uuid[])
+        """, user_id, summary_ids)
+    return [{"summaryId": row["summary_id"], "scrapId": row["id"]} for row in rows]
+
+
 async def save_scrap(user_id: UUID, summary_id: UUID):
     pool = await get_pool()
     async with pool.acquire() as conn:

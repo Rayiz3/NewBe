@@ -6,6 +6,18 @@ import Animated from "react-native-reanimated"
 import Svg, { ClipPath, Defs, FeDropShadow, Filter, G, Path, Rect, SvgProps } from "react-native-svg"
 
 
+// Lucide Trash, ISC license: ../assets/licenses/lucide.txt
+export const TrashIcon = ({ color = colors.white, ...props }: SvgProps) => (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none"
+        stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <Path d="M10 11v6" />
+        <Path d="M14 11v6" />
+        <Path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+        <Path d="M3 6h18" />
+        <Path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    </Svg>
+);
+
 export const ScrapIcon = ({ color = colors.light.text, strokeWidth = 3, ...props }: SvgProps) => (
     <Svg width={scale(56)} height={scale(56)} viewBox="0 0 56 56" fill="none" {...props}>
         <Path d="M41 5C42.3261 5 43.5979 5.5385 44.5355 6.49704C45.4732 7.45557 46 8.75563 46 10.1112V48.4452C45.9999 48.8928 45.8848 49.3324 45.6662 49.7202C45.4476 50.108 45.1333 50.4303 44.7546 50.6549C44.376 50.8795 43.9462 50.9985 43.5084 51C43.0707 51.0015 42.6401 50.8855 42.26 50.6635L30.98 44.0751C30.2247 43.6341 29.3699 43.4021 28.5 43.4021C27.6301 43.4021 26.7753 43.6341 26.02 44.0751L14.74 50.6635C14.3599 50.8855 13.9293 51.0015 13.4916 51C13.0538 50.9985 12.624 50.8795 12.2454 50.6549C11.8667 50.4303 11.5524 50.108 11.3338 49.7202C11.1152 49.3324 11.0001 48.8928 11 48.4452V10.1112C11 8.75563 11.5268 7.45557 12.4645 6.49704C13.4021 5.5385 14.6739 5 16 5H41Z"
@@ -13,12 +25,12 @@ export const ScrapIcon = ({ color = colors.light.text, strokeWidth = 3, ...props
     </Svg>
 );
 
-export const LinkOriginIcon = (props: SvgProps) => (
+export const LinkOriginIcon = ({ color = colors.light.text, ...props }: SvgProps) => (
     <Svg width={scale(56)} height={scale(56)} viewBox="0 0 56 56" fill="none" {...props}>
-        <Path d="M34.9997 42H23.333" stroke={colors.light.text} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-        <Path d="M41.9997 32.6667H23.333" stroke={colors.light.text} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-        <Path d="M9.33366 51.3334H46.667C47.9047 51.3334 49.0917 50.8417 49.9668 49.9665C50.842 49.0914 51.3337 47.9044 51.3337 46.6667V9.33335C51.3337 8.09568 50.842 6.90869 49.9668 6.03352C49.0917 5.15835 47.9047 4.66669 46.667 4.66669H18.667C17.4293 4.66669 16.2423 5.15835 15.3672 6.03352C14.492 6.90869 14.0003 8.09568 14.0003 9.33335V46.6667C14.0003 47.9044 13.5087 49.0914 12.6335 49.9665C11.7583 50.8417 10.5713 51.3334 9.33366 51.3334ZM9.33366 51.3334C8.09598 51.3334 6.909 50.8417 6.03383 49.9665C5.15866 49.0914 4.66699 47.9044 4.66699 46.6667V25.6667C4.66699 24.429 5.15866 23.242 6.03383 22.3669C6.909 21.4917 8.09598 21 9.33366 21H14.0003" stroke={colors.light.text} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-        <Path d="M39.6663 14H25.6663C24.3777 14 23.333 15.0447 23.333 16.3333V21C23.333 22.2887 24.3777 23.3333 25.6663 23.3333H39.6663C40.955 23.3333 41.9997 22.2887 41.9997 21V16.3333C41.9997 15.0447 40.955 14 39.6663 14Z" stroke={colors.light.text} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+        <Path d="M34.9997 42H23.333" stroke={color} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+        <Path d="M41.9997 32.6667H23.333" stroke={color} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+        <Path d="M9.33366 51.3334H46.667C47.9047 51.3334 49.0917 50.8417 49.9668 49.9665C50.842 49.0914 51.3337 47.9044 51.3337 46.6667V9.33335C51.3337 8.09568 50.842 6.90869 49.9668 6.03352C49.0917 5.15835 47.9047 4.66669 46.667 4.66669H18.667C17.4293 4.66669 16.2423 5.15835 15.3672 6.03352C14.492 6.90869 14.0003 8.09568 14.0003 9.33335V46.6667C14.0003 47.9044 13.5087 49.0914 12.6335 49.9665C11.7583 50.8417 10.5713 51.3334 9.33366 51.3334ZM9.33366 51.3334C8.09598 51.3334 6.909 50.8417 6.03383 49.9665C5.15866 49.0914 4.66699 47.9044 4.66699 46.6667V25.6667C4.66699 24.429 5.15866 23.242 6.03383 22.3669C6.909 21.4917 8.09598 21 9.33366 21H14.0003" stroke={color} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+        <Path d="M39.6663 14H25.6663C24.3777 14 23.333 15.0447 23.333 16.3333V21C23.333 22.2887 24.3777 23.3333 25.6663 23.3333H39.6663C40.955 23.3333 41.9997 22.2887 41.9997 21V16.3333C41.9997 15.0447 40.955 14 39.6663 14Z" stroke={color} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
 );
 

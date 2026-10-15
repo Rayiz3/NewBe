@@ -1,13 +1,35 @@
 import { Image as SvgImage } from 'expo-image';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { Feather } from '@expo/vector-icons';
+import { TrashIcon } from '../Icons';
+import ScrapSummary from './ScrapSummary';
 import { colors } from '@/constants/colors';
 import { IMAGES } from '@/constants/data';
 import { fontSize, scale, space } from '@/constants/sizes';
-import { formatScrapDate, ScrapItem } from '@/systems/scrap';
+import { formatScrapDate, ScrapItem, useScrapStore } from '@/systems/scrap';
 
 export default function ItemScrap({ item }: { item: ScrapItem }) {
+    const remove = useScrapStore(s => s.remove);
+    const deleting = useScrapStore(s => s.deletingIds.includes(item.id));
+    const expanded = useScrapStore(s => s.expandedIds.includes(item.id));
+    const toggleExpanded = useScrapStore(s => s.toggleExpanded);
     return (
-        <View style={styles.row} accessible accessibilityLabel={`${formatScrapDate(item.savedAt)}, ${item.summary.content}`}>
+        <View>
+        <ReanimatedSwipeable overshootRight={false} rightThreshold={40}
+            renderRightActions={() => (
+                <Pressable style={styles.deleteButton} accessibilityRole="button"
+                    accessibilityLabel="스크랩 삭제" accessibilityState={{ disabled: deleting, busy: deleting }}
+                    disabled={deleting} onPress={() => remove(item.id)}>
+                    {deleting ? <ActivityIndicator color={colors.white} /> : <TrashIcon />}
+                </Pressable>
+            )}>
+        <Pressable style={styles.row} accessibilityRole="button"
+            accessibilityState={{ expanded }} onPress={() => toggleExpanded(item.id)}
+            accessibilityLabel={`${formatScrapDate(item.savedAt)}, ${item.summary.content}`}
+            accessibilityHint="누르면 요약 전문을 펼치거나 접습니다. 왼쪽으로 밀면 삭제 버튼이 나타납니다."
+            accessibilityActions={[{ name: 'delete', label: '스크랩 삭제' }]}
+            onAccessibilityAction={event => { if (event.nativeEvent.actionName === 'delete') remove(item.id); }}>
             <Text style={styles.date}>{formatScrapDate(item.savedAt)}</Text>
             <Image source={IMAGES[item.summary.personaId]?.TOKEN ?? IMAGES.DEFAULT.TOKEN}
                 style={styles.token} resizeMode="contain" />
@@ -20,16 +42,22 @@ export default function ItemScrap({ item }: { item: ScrapItem }) {
                     </Text>
                 </View>
             </View>
+            <Feather name="more-vertical" size={scale(48)} color={colors.black} />
+        </Pressable>
+        </ReanimatedSwipeable>
+        <ScrapSummary item={item} expanded={expanded} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     row: {
+        backgroundColor: colors.white,
         flexDirection: 'row', alignItems: 'center', gap: scale(16),
         paddingHorizontal: space.contentPadding, paddingVertical: scale(32),
-        borderTopWidth: space.borderWidth, borderTopColor: colors.grayLight,
+        borderTopWidth: 2, borderTopColor: colors.grayLight,
     },
+    deleteButton: { height: '100%', aspectRatio: 1, backgroundColor: '#C62828', alignItems: 'center', justifyContent: 'center' },
     date: { color: colors.black, fontSize: fontSize.menu, fontFamily: 'Pretendard',
         fontWeight: '500', textAlign: 'right', lineHeight: scale(60) },
     token: { width: scale(120), height: scale(120) },

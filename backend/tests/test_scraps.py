@@ -24,6 +24,7 @@ def snapshot():
 
 
 def test_requires_auth(client):
+    assert client.post('/scraps/status', json={"summaryIds": [str(uuid4())]}).status_code == 401
     assert client.get('/scraps').status_code == 401
     assert client.post('/scraps', json={"summaryId": str(uuid4())}).status_code == 401
     assert client.post('/scraps/batch-delete', json={"ids": [str(uuid4())]}).status_code == 401
@@ -95,3 +96,17 @@ def test_auth_service_verifies_token(monkeypatch):
     with pytest.raises(auth.HTTPException) as error:
         auth._verify_token('invalid')
     assert error.value.status_code == 401
+
+
+def test_status_is_scoped_and_validated(client, monkeypatch):
+    user, summary, saved = uuid4(), uuid4(), uuid4()
+    client.app.dependency_overrides[current_user] = lambda: user
+    lookup = AsyncMock(return_value=[{"summaryId": summary, "scrapId": saved}])
+    monkeypatch.setattr(scraps, 'scrap_status', lookup)
+    response = client.post('/scraps/status', json={"summaryIds": [str(summary), str(summary)]})
+    assert response.json() == {"items": [{"summaryId": str(summary), "scrapId": str(saved)}]}
+    lookup.assert_awaited_once_with(user, [summary])
+    assert client.post('/scraps/status', json={"summaryIds": []}).status_code == 422
+    assert client.post('/scraps/status', json={"summaryIds": [str(summary)] * 101}).status_code == 422
+    assert client.post('/scraps/status', json={"summaryIds": ["invalid"]}).status_code == 422
+    assert client.post('/scraps/status', json={"summaryIds": [str(summary)], "userId": str(user)}).status_code == 422
