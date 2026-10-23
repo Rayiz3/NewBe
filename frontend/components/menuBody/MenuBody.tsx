@@ -6,7 +6,7 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from "react-native-svg";
 import MenuButton from "./MenuButton";
 
 
-const menus = ["편집", "스크랩", "로그아웃"];
+const menus = ["편집", "스크랩", "설정"];
 
 export default function MenuBody() {
     const userName = useAccountStore(s => s.userName);

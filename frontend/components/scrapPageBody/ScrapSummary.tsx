@@ -20,6 +20,7 @@ export default function ScrapSummary({ item, expanded }: { item: ScrapItem; expa
         <View style={[styles.container, styles.measuredContent]} onLayout={measureContent}>
             <View style={styles.box}>
                 <Text style={styles.summary}>{item.summary.content}</Text>
+                <Text style={styles.source}>출처: {item.summary.source?.trim() || '출처 미제공'} · AI 요약</Text>
             </View>
             <Pressable style={styles.originRow} accessibilityRole="link" accessibilityLabel="본문 보기"
                 accessibilityState={{ disabled: !hasOriginal || opening, busy: opening }}
@@ -38,6 +39,7 @@ export default function ScrapSummary({ item, expanded }: { item: ScrapItem; expa
 }
 
 const styles = StyleSheet.create({
+    source: { fontSize: 13, lineHeight: 20, color: colors.black, marginTop: 12 },
     reveal: { overflow: 'hidden' },
     measuredContent: { position: 'absolute', top: 0, left: 0, right: 0 },
     container: { paddingHorizontal: space.contentPadding, paddingVertical: scale(32), gap: scale(24),

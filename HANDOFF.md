@@ -1,5 +1,13 @@
 # Handoff
 
+## 로그인 유지 (2026-10-16)
+- Supabase 클라이언트에 React Native AsyncStorage를 연결하고 persistSession/autoRefreshToken을 활성화했다. 웹은 기본 브라우저 저장소를 사용한다.
+- 루트 레이아웃에서 initializeAccountSession을 실행해 저장된 세션으로 계정 상태와 피드를 복원한다. 앱 활성 중 토큰 자동 갱신, 백그라운드에서는 갱신 중지. auth 이벤트 구독과 AppState 리스너는 언마운트 시 정리한다.
+- 토큰 갱신 때 편집 중인 피드를 덮어쓰지 않는다. 프로필 조회 실패만으로 로그아웃하지 않으며, 계정 변경 이후 늦게 도착한 프로필 결과는 무시한다.
+- 로그아웃 메뉴는 실제 Supabase signOut(scope: local)을 호출해 저장된 세션을 제거하고 계정/피드를 초기화한다. 서버에서 세션이 취소되거나 refresh token이 만료되면 재로그인이 필요할 수 있다.
+- @react-native-async-storage/async-storage 네이티브 의존성 추가: 개발용 및 배포용 APK를 한 번 재빌드해야 한다. 이후 로그인하면 앱 종료·재실행 시 복원된다. 백엔드/DB 변경은 없다.
+- account-session.test.cjs 3개 및 기존 scrap-status.test.cjs 5개 통과. 실제 APK의 강제 종료·재실행 및 장시간 토큰 갱신 검증은 별도로 필요하다.
+
 ## 스크랩 중복 클릭 처리 (2026-10-14 최종 변경)
 - 자동 사전 검사와 저장됨 비활성화를 제거했다. 버튼은 항상 '스크랩'이며 요청 진행 중에만 연속 클릭을 막는다.
 - 클릭 시 `POST /scraps/status`에 해당 summaryId 하나만 보내 검사한다. 이미 저장됐으면 '이미 스크랩한 뉴스예요.' 토스트만 표시하고 저장 요청은 보내지 않는다.
@@ -50,6 +58,8 @@
 - 환경변수 관리 정리 시 **Fly Secrets 등록을 먼저** 하고 `.dockerignore`에 `.env`, `.env.*` 제외(`!.env.example` 예외)를 추가한 뒤 재빌드·배포한다. 이 정리 작업의 완료 여부도 미확인이다.
 
 ## 프론트엔드 구현 지침
+
+- Node 패키지의 설치 위치는 `frontend/node_modules`이다. npm 설치·제거는 `frontend`에서 실행하고, 의존성은 `frontend/package.json`과 `frontend/package-lock.json`에서 관리한다. workspace 루트에 별도의 Node 패키지 설치를 만들지 않는다.
 
 - React 로컬 state보다는 가능한 한 Zustand 상태값을 사용한다.
 - 이벤트 handler와 기타 기능 함수는 가능한 한 상태·기능 모듈의 `.tsx` 파일에 구현하여 렌더링 코드와 분리한다.

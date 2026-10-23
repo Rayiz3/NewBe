@@ -25,7 +25,6 @@ export default function Content({session, animatedStyle}: Props) {
     const hasNewsUrl = isNewsUrlValid(session.newsUrl);
     const originMotion = useButtonScale(!hasNewsUrl || isOpening);
     const scrapDisabled = isSaving;
-    const scrapLabel = '스크랩';
     const scrapMotion = useButtonScale(scrapDisabled);
     return (
         <Animated.View style={[styles.container, animatedStyle]}>
@@ -34,6 +33,13 @@ export default function Content({session, animatedStyle}: Props) {
                 <Text style={[styles.content, shadowStyle]}>{session.content}</Text>
             </ScrollView>
             <View style={styles.actions}>
+            <AnimatedPressable style={[styles.originRow, scrapMotion.animatedStyle, scrapDisabled && { opacity: 0.5 }]} accessibilityRole="button"
+                onPressIn={scrapMotion.enlarge} onPressOut={scrapMotion.restore}
+                accessibilityLabel="스크랩" accessibilityState={{ disabled: scrapDisabled, busy: isSaving }}
+                disabled={scrapDisabled} onPress={() => saveScrap(session)}>
+                <ScrapIcon />
+                <Text style={[styles.content, shadowStyle, styles.originText]}>스크랩</Text>
+            </AnimatedPressable>
             <AnimatedPressable style={[styles.originRow, originMotion.animatedStyle]} accessibilityRole="link"
                 onPressIn={originMotion.enlarge} onPressOut={originMotion.restore}
                 accessibilityLabel="본문 보기"
@@ -43,13 +49,6 @@ export default function Content({session, animatedStyle}: Props) {
                 onPress={() => openOriginalNews(session.personaId)}>
                 <LinkOriginIcon />
                 <Text style={[styles.content, shadowStyle, styles.originText]}>본문 보기</Text>
-            </AnimatedPressable>
-            <AnimatedPressable style={[styles.originRow, scrapMotion.animatedStyle, scrapDisabled && { opacity: 0.5 }]} accessibilityRole="button"
-                onPressIn={scrapMotion.enlarge} onPressOut={scrapMotion.restore}
-                accessibilityLabel={scrapLabel} accessibilityState={{ disabled: scrapDisabled, busy: isSaving }}
-                disabled={scrapDisabled} onPress={() => saveScrap(session)}>
-                <ScrapIcon />
-                <Text style={[styles.content, shadowStyle, styles.originText]}>{scrapLabel}</Text>
             </AnimatedPressable>
             </View>
         </Animated.View>

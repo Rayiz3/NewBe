@@ -58,7 +58,7 @@ export default function Page({session, idx}: Props) {
 
     return (
         <View key={`page-${idx}`} style={styles.container}>
-            <Title title={persona?.categoryName || ""} category={session.category}/>
+            <Title title={persona?.categoryName || ""} category={session.category} source={session.source}/>
             <Content session={session} animatedStyle={contentAnimatedStyle}/>
             <TailImage animatedStyle={contentAnimatedStyle} />
             <Animated.Image 

@@ -8,6 +8,7 @@ import { CatBusinessIcon, CatEntertainmentIcon, CatNationIcon, CatScienceIcon, C
 type Props = {
     title: string,
     category: string,
+    source: string,
 }
 
 const iconMap: Record<string, React.ComponentType> = {
@@ -20,13 +21,16 @@ const iconMap: Record<string, React.ComponentType> = {
     "WORLD": (props) => <CatWorldIcon style={shadowStyle} color={colors.light.text} />,
 }
 
-export default function Title({title, category}: Props) {
+export default function Title({title, category, source}: Props) {
 
     const IconComponent = iconMap[category]
     return (
         <View style={styles.container}>
             <IconComponent />
-            <Text style={[styles.title, shadowStyle]}>{title}</Text>
+            <View style={styles.textRow}>
+                <Text style={[styles.title, shadowStyle]}>{title}</Text>
+                {!!source && <Text style={[styles.source, shadowStyle]}>{source}</Text>}
+            </View>
         </View>
     )
 }
@@ -42,8 +46,18 @@ const styles = StyleSheet.create({
         marginBottom: scale(36),
         zIndex: 10,
     },
-    icon: {
-
+    textRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        gap: scale(24),
+        flexShrink: 1,
+    },
+    source: {
+        fontSize: fontSize.menuBody,
+        fontWeight: '500',
+        color: colors.light.text,
+        flexShrink: 1,
+        paddingBottom: scale(12),
     },
     title: {
         fontSize: fontSize.mainTitle,
