@@ -2,7 +2,6 @@ import { colors } from "@/constants/colors";
 import { fontSize, space } from "@/constants/sizes";
 import { StyleSheet, Text, View } from "react-native";
 import GoogleLoginButton from "./GoogleLoginButton";
-import MenuButton from './MenuButton';
 
 
 export default function MenuDefault() {
@@ -13,7 +12,6 @@ export default function MenuDefault() {
                 <Text style={styles.highlight}>로그인</Text>해서 맞춤 설정을 이용하세요!
             </Text>
             <GoogleLoginButton />
-            <MenuButton name="설정" />
         </View>
     )
 }

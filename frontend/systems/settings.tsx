@@ -1,10 +1,14 @@
 import { Alert, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { useAccountStore } from './account';
+import Constants from 'expo-constants';
+
+export const APP_VERSION = Constants.expoConfig?.version ?? '—';
 
 export function openSettings() { router.push('/settings-page'); }
 export function openPrivacy() { router.push('/privacy-page'); }
 export function openServiceInfo() { router.push('/service-info-page'); }
+export function openAbout() { router.push('/about-page'); }
 export function confirmAccountDeletion() {
     if (!useAccountStore.getState().isLogin || useAccountStore.getState().isLoading) return;
     Alert.alert('뉴비 계정을 삭제할까요?',

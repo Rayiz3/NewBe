@@ -8,7 +8,8 @@ import { LinkOriginIcon } from '../Icons';
 import Animated from 'react-native-reanimated';
 import { useScrapExpansion } from '@/systems/scrapMotion';
 
-export default function ScrapSummary({ item, expanded }: { item: ScrapItem; expanded: boolean }) {
+export default function ScrapSummary({ item }: { item: ScrapItem }) {
+    const expanded = useScrapStore(s => s.expandedIds.includes(item.id));
     const { animatedStyle, measureContent } = useScrapExpansion(expanded);
     const openOriginal = useScrapStore(s => s.openOriginal);
     const toggleExpanded = useScrapStore(s => s.toggleExpanded);

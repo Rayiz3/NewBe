@@ -45,7 +45,7 @@ export default function ItemScrap({ item }: { item: ScrapItem }) {
             <Feather name="more-vertical" size={scale(48)} color={colors.black} />
         </Pressable>
         </ReanimatedSwipeable>
-        <ScrapSummary item={item} expanded={expanded} />
+        <ScrapSummary item={item} />
         </View>
     );
 }

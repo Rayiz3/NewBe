@@ -1,9 +1,17 @@
 import { colors } from "@/constants/colors"
 import { scale, space } from "@/constants/sizes"
 import * as React from "react"
+import { Image } from "expo-image"
 import { StyleSheet, View } from "react-native"
 import Animated from "react-native-reanimated"
 import Svg, { ClipPath, Defs, FeDropShadow, Filter, G, Path, Rect, SvgProps } from "react-native-svg"
+
+export const SettingsIcon = () => (
+    <View style={styles.placeholder}>
+        <Image source={require('@/assets/images/menu-settings.svg')}
+            style={{ width: space.menuIconSize, height: space.menuIconSize }} contentFit="contain" />
+    </View>
+);
 
 
 // Lucide Trash, ISC license: ../assets/licenses/lucide.txt

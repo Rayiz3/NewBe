@@ -2,8 +2,7 @@ import { colors } from "@/constants/colors";
 import { fontSize, scale, space } from "@/constants/sizes";
 import { runMenuAction } from "@/systems/navigation";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { EditIcon, ScrapIcon } from "../Icons";
-import { Feather } from '@expo/vector-icons';
+import { EditIcon, ScrapIcon, SettingsIcon } from "../Icons";
 
 
 type Props = {
@@ -21,7 +20,7 @@ export default function MenuButton({name}: Props) {
                 <ScrapIcon width={space.menuIconSize} height={space.menuIconSize}
                   color={colors.black} strokeWidth={4.5 * 56 / 96} />
               </View>
-            : <Feather name="settings" size={space.menuIconSize} color={colors.black} />}
+            : <SettingsIcon />}
         <Text style={styles.buttonLabel}>{name}</Text>
       </TouchableOpacity>
     )

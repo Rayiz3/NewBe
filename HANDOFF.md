@@ -59,6 +59,8 @@
 
 ## 프론트엔드 구현 지침
 
+- UI의 primary 색상은 `colors.highlight`를 사용한다. 주요 동작 버튼과 선택·활성 상태 등 primary 역할에 적용한다.
+
 - Node 패키지의 설치 위치는 `frontend/node_modules`이다. npm 설치·제거는 `frontend`에서 실행하고, 의존성은 `frontend/package.json`과 `frontend/package-lock.json`에서 관리한다. workspace 루트에 별도의 Node 패키지 설치를 만들지 않는다.
 
 - React 로컬 state보다는 가능한 한 Zustand 상태값을 사용한다.
