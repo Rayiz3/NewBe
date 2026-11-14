@@ -1,10 +1,11 @@
 import { colors } from "@/constants/colors";
-import { fontSize, scale, screen, space } from "@/constants/sizes";
+import { fontSize, scale, space } from "@/constants/sizes";
 import { usePersonaDropZone, usePersonaStore } from "@/systems/persona";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import Token from "./Token";
 
 export default function FeedList() {
+  const isDragging = usePersonaStore(s => s.isDragging);
   const feed = usePersonaStore(s => s.feed);
   const { cardContainerRef, measureDropZone } = usePersonaDropZone("feed");
 
@@ -21,6 +22,10 @@ export default function FeedList() {
         style={styles.cardContainer}
         ref={cardContainerRef}
         onLayout={() => measureDropZone()}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}
+            scrollEnabled={!isDragging}
+            onScroll={() => usePersonaStore.getState().refreshLayout()} scrollEventThrottle={32}
+            contentContainerStyle={{ gap: 4, alignItems: 'center', flexGrow: 1, justifyContent: 'center' }}>
           {feed.map((personaId, index) => 
             <Token
               key={personaId}
@@ -28,14 +33,16 @@ export default function FeedList() {
               location="feed"
               index={index} />
           )}
+          </ScrollView>
       </View>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: screen.width,
+    width: "100%",
     paddingTop: scale(24),
     paddingBottom: scale(24),
     paddingHorizontal: space.mainPadding,
@@ -65,10 +72,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: scale(32),
+    gap: 4,
     width: "100%",
     height: scale(180),
     borderRadius: scale(15),
-    paddingHorizontal: space.mainPadding,
+    paddingHorizontal: 0,
   },
 });

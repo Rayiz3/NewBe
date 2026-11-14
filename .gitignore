@@ -13,3 +13,8 @@ wheels/
 .impeccable/
 
 node_modules/
+
+resources/
+
+# Public app resources must be included in the EAS build archive.
+!/frontend/resources/

@@ -3,7 +3,7 @@ import { Dimensions } from "react-native";
 export const screen = Dimensions.get("window");
 
 export const scale = (length: number) => {
-    return length * screen.width / 1080;
+    return length * Math.min(screen.width, 432) / 1080;
 }
 
 export const fontSize = {

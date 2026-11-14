@@ -1,6 +1,6 @@
 import { colors } from "@/constants/colors";
-import { fontSize, scale, screen, space } from "@/constants/sizes";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { fontSize, space } from "@/constants/sizes";
+import { StyleSheet, Text, View } from "react-native";
 
 import personas from '@/resources/personas.json';
 import { usePersonaDropZone, usePersonaStore } from "@/systems/persona";
@@ -12,9 +12,7 @@ export default function Personas() {
 
   return (
     <View style={styles.container} ref={cardContainerRef} onLayout={measureDropZone}>
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={styles.scroll}>
+        <View style={styles.scroll}>
             <View style={styles.grid}>
                 {personas.slice(1).map((persona) => 
                   <Token
@@ -23,7 +21,7 @@ export default function Personas() {
                     location="persona" />
                 )}
             </View>
-        </ScrollView>
+        </View>
 
         <Text style={styles.instruction}>
           {isDragging === 'persona'
@@ -40,26 +38,25 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     alignItems: "center",
-    width: screen.width,
-    height: scale(700),
+    width: "100%",
+    minHeight: 260,
     borderColor: colors.grayLight,
     borderWidth: space.borderWidth,
     backgroundColor: colors.main,
-    padding: scale(80),
-    overflow: "scroll",
+    padding: 20,
+
   },
   scroll: {
-    flex: 1,
+    width: "100%",
   },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    gap: scale(88),
+    gap: 24,
   },
   instruction: {
-    position: 'absolute',
-    bottom: scale(24),
+    marginTop: 24,
     color: colors.black,
     fontSize: fontSize.menu,
     textAlign: "center",

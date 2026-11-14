@@ -61,7 +61,7 @@ export const settingsStyles = StyleSheet.create({
 });
 const styles = StyleSheet.create({
     page: { flex: 1, backgroundColor: colors.white },
-    content: { paddingBottom: 32, width: '100%', maxWidth: 720, alignSelf: 'center' },
+    content: { paddingBottom: 32, width: '100%', alignSelf: 'center' },
     section: { width: '100%' },
     sectionHeader: { backgroundColor: colors.grayLight, paddingHorizontal: 22, paddingVertical: 12,
         borderTopWidth: StyleSheet.hairlineWidth, borderBottomWidth: StyleSheet.hairlineWidth,

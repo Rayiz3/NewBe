@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import { fontSize, scale, screen, space } from "@/constants/sizes";
+import { fontSize, scale, space } from "@/constants/sizes";
 import { shadowStyle } from "@/constants/typography";
 import { Image, StyleSheet, Text, View } from "react-native";
 
@@ -34,8 +34,8 @@ export default function Profile() {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        width: screen.width,
-        height: scale(740),
+        width: "100%",
+        minHeight: 250,
         borderBottomColor: colors.grayLight,
         borderBottomWidth: space.borderWidth,
         paddingHorizontal: space.mainPadding,
@@ -43,12 +43,13 @@ const styles = StyleSheet.create({
     textBlock: {
         flex: 1,
         flexDirection: "column",
-        paddingVertical: scale(188),
+        paddingVertical: 24,
         zIndex: 1,
     },
     titleRow: {
         flexDirection: "row",
         alignItems: "flex-end",
+        flexWrap: "wrap",
         marginBottom: space.contentPadding,
     },
     name: {
@@ -69,13 +70,14 @@ const styles = StyleSheet.create({
         lineHeight: fontSize.menuBody * 1.5,
     },
     placeHolder: {
-        width: "45%",
+        width: "35%",
     },
     image: {
         position: "absolute",
-        top: 0,
+        bottom: 0,
+        right: 0,
         zIndex: 0,
-        width: scale(1080),
-        height: scale(740),
+        width: "45%",
+        height: 250,
     },
 });

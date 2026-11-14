@@ -22,7 +22,7 @@ export default function Token({personaId, location, index=-1}: Props) {
             delayLongPress={400}
             onPressIn={select}
             onLongPress={startDragging}>
-            <View ref={tokenRef}>
+            <View ref={tokenRef} style={location === "feed" ? { width: "100%", aspectRatio: 1 } : undefined}>
                 <Image
                     source={IMAGES[personaId][personaId === curPersona? "TOKEN_SELECT" : "TOKEN"]}
                     style={location==="persona"? styles.persona : styles.token}
@@ -53,13 +53,13 @@ const styles = StyleSheet.create({
     height: space.menuTokenSize,
   },
   tokenWrapper: {
-    width: space.feedTokenSize,
-    height: space.feedTokenSize,
+    width: 48,
+    minHeight: 48,
     justifyContent: "center",
     alignItems: "center",
   },
   token: {
-    width: space.feedTokenSize,
-    height: space.feedTokenSize,
+    width: "100%",
+    height: "100%",
   },
 })

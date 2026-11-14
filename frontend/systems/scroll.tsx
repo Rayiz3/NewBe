@@ -1,4 +1,3 @@
-import { screen } from "@/constants/sizes";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { create } from "zustand";
 
@@ -12,6 +11,8 @@ export const useScrollStore = create<ScrollProps>((set, get) => ({
     setCurPage: (v) => set({curPage: v}),
 }));
 export function handlePageScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-    const pageIndex = Math.round(event.nativeEvent.contentOffset.x / screen.width);
+    const { contentOffset, layoutMeasurement } = event.nativeEvent;
+    if (layoutMeasurement.width <= 0) return;
+    const pageIndex = Math.max(0, Math.round(contentOffset.x / layoutMeasurement.width));
     useScrollStore.getState().setCurPage(pageIndex);
 }

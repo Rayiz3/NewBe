@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import { fontSize, scale, screen, space } from "@/constants/sizes";
+import { fontSize, scale } from "@/constants/sizes";
 import { shadowStyle } from "@/constants/typography";
 import { StyleSheet, Text, View } from "react-native";
 import { CatBusinessIcon, CatEntertainmentIcon, CatNationIcon, CatScienceIcon, CatSportsIcon, CatTechnologyIcon, CatWorldIcon } from "../Icons";
@@ -23,13 +23,13 @@ const iconMap: Record<string, React.ComponentType> = {
 
 export default function Title({title, category, source}: Props) {
 
-    const IconComponent = iconMap[category]
+    const IconComponent = iconMap[category] ?? CatNationIcon
     return (
         <View style={styles.container}>
             <IconComponent />
             <View style={styles.textRow}>
-                <Text style={[styles.title, shadowStyle]}>{title}</Text>
-                {!!source && <Text style={[styles.source, shadowStyle]}>{source}</Text>}
+                <Text numberOfLines={1} style={[styles.title, shadowStyle]}>{title}</Text>
+                {!!source && <Text numberOfLines={1} ellipsizeMode="tail" accessibilityLabel={source} style={[styles.source, shadowStyle]}>{source}</Text>}
             </View>
         </View>
     )
@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         gap: scale(24),
-        width: screen.width,
-        paddingLeft: space.contentPadding,
+        width: "100%",
+        paddingLeft: 0,
         marginBottom: scale(36),
         zIndex: 10,
     },
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-end',
         gap: scale(24),
-        flexShrink: 1,
+        flex: 1,
+        minWidth: 0,
     },
     source: {
         fontSize: fontSize.menuBody,
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
         paddingBottom: scale(12),
     },
     title: {
+        flexShrink: 1,
         fontSize: fontSize.mainTitle,
         fontWeight: "600",
         color: colors.light.text,

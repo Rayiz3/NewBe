@@ -1,12 +1,13 @@
 import { colors } from "@/constants/colors";
-import { scale, screen, space } from "@/constants/sizes";
-import { StyleSheet, View } from "react-native";
+import { space } from "@/constants/sizes";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import NavigationButton from "./NavigationButton";
 import PageIndicator from "./PageIndicator";
 
 export default function Footer() {
+  const { width } = useWindowDimensions();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: width >= 600 ? 80 : width * 270 / 1080 }]}>
       <NavigationButton name="편집" side="L" />
       <PageIndicator />
       <NavigationButton name="더보기" side="R" />
@@ -22,8 +23,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    width: screen.width,
-    height: scale(270),
+    width: "100%",
+
     paddingHorizontal: space.mainPadding,
     backgroundColor: '#ffffff',
     borderTopColor: colors.grayLight,

@@ -4,13 +4,16 @@ import { goBack } from "@/systems/navigation";
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GoBackIcon } from "./Icons";
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 type Props = {
     name: string
 }
 
 export default function MenuHeader({name}: Props) {
+    const insets = useSafeAreaInsets();
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top, minHeight: 64 + insets.top }]}>
             <StatusBar
                 barStyle="dark-content"
                 backgroundColor={colors.white}
@@ -34,10 +37,10 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "flex-end",
+        alignItems: "center",
         width: "100%",
-        height: space.menuHeaderHeight,
-        paddingBottom: scale(32),
+
+        paddingBottom: 8,
         paddingHorizontal: space.contentPadding,
         backgroundColor: colors.white,
         borderBottomColor: colors.grayLight,
@@ -46,9 +49,9 @@ const styles = StyleSheet.create({
     sideButton: {
         justifyContent: "center",
         alignItems: "center",
-        width: scale(58),
-        height: scale(58),
-        paddingBottom: scale(140),
+        width: 48,
+        height: 48,
+
     },
     title: {
         flex: 1,

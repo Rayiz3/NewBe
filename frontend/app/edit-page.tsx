@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import DragOverlay from "@/components/editPageBody/DragOverlay";
 import FeedList from "@/components/editPageBody/FeedList";
 import Personas from "@/components/editPageBody/Personas";
@@ -7,7 +8,7 @@ import { saveCurrentFeed } from "@/systems/account";
 import { usePersonaStore } from "@/systems/persona";
 import { useNavigation } from "expo-router";
 import { useEffect, useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 export default function EditPage() {
     const isDragging = usePersonaStore(s => s.isDragging);
@@ -21,17 +22,21 @@ export default function EditPage() {
     }, [navigation]);
 
     return (
-        <View style={styles.container} {...panResponder.panHandlers}>
+        <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} {...panResponder.panHandlers}>
             <MenuHeader name="편집하기" />
+            <ScrollView scrollEnabled={!isDragging} onScroll={() => usePersonaStore.getState().refreshLayout()} scrollEventThrottle={32}
+                contentContainerStyle={styles.content}>
             <Profile />
             <FeedList />
             <Personas />
+            </ScrollView>
             {isDragging && <DragOverlay />}
-        </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    content: { width: "100%", alignSelf: "center", paddingBottom: 32 },
     container: {
         flexDirection: 'column',
         justifyContent: 'flex-start',

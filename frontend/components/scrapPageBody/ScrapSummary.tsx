@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.mainOpacity, borderRadius: scale(24) },
     summary: { color: colors.black, fontFamily: 'Pretendard', fontWeight: '500',
         fontSize: fontSize.menuBody, lineHeight: scale(60) },
-    originRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    originRow: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
         gap: scale(12) },
-    handleButton: { alignItems: 'center', justifyContent: 'center' },
+    handleButton: { minHeight: 48, alignItems: 'center', justifyContent: 'center' },
     handleImage: { width: scale(24), height: scale(54), transform: [{ rotate: '-90deg' }] },
 });

@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useEffect } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import MenuHeader from '@/components/MenuHeader';
 import ItemScrap from '@/components/scrapPageBody/ItemScrap';
 import { colors } from '@/constants/colors';
@@ -15,7 +15,7 @@ export default function ScrapPage() {
     useEffect(() => { load(); }, [load]);
     const insets = useSafeAreaInsets();
     return (
-        <View style={styles.container}>
+        <SafeAreaView edges={['left', 'right']} style={styles.container}>
             <MenuHeader name="스크랩" />
             <Text style={styles.count}>
                 <Text style={styles.highlight}>{items.length}개</Text>의 스크랩이 있습니다.
@@ -27,7 +27,7 @@ export default function ScrapPage() {
                 contentContainerStyle={{ paddingBottom: insets.bottom }}
                 ListFooterComponent={items.length ? <View style={styles.bottomBorder} /> : null}
                 ListEmptyComponent={!isLoading && !error ? <Text style={styles.empty}>아직 스크랩한 뉴스가 없습니다.</Text> : null} />
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         paddingBottom: scale(45), color: colors.black, fontFamily: 'Pretendard',
         fontSize: fontSize.menuBody, fontWeight: '500', lineHeight: scale(80) },
     highlight: { color: colors.highlight, fontWeight: '700' },
-    list: { flex: 1 },
+    list: { flex: 1, width: '100%', alignSelf: 'center' },
     bottomBorder: { borderBottomWidth: space.borderWidth, borderBottomColor: colors.grayLight },
     empty: { color: colors.black, fontSize: fontSize.menuBody, textAlign: 'center',
         paddingVertical: scale(120), paddingHorizontal: space.contentPadding },

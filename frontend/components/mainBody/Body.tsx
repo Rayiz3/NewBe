@@ -1,7 +1,8 @@
 import { colors } from "@/constants/colors";
 import { usePersonaStore } from "@/systems/persona";
 import { useRequestStore } from "@/systems/request";
-import { handlePageScroll } from "@/systems/scroll";
+import { handlePageScroll, useScrollStore } from "@/systems/scroll";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useNewsRefresh } from "@/systems/newsRefresh";
 import Page from "./Page";
@@ -13,10 +14,22 @@ export default function Body() {
     const getSummaries = useRequestStore(s => s.getSummaries);
     const feed = usePersonaStore(s => s.feed);
     
+    const pages = feed.filter(id => summaries[id]);
+    const pager = useRef<ScrollView>(null);
+    const [size, setSize] = useState({ width: 0, height: 0 });
+    const pageCount = pages.length;
     useNewsRefresh();
+    useEffect(() => {
+        if (!size.width || !pageCount) return;
+        const state = useScrollStore.getState();
+        const index = Math.min(state.curPage, pageCount - 1);
+        if (index !== state.curPage) state.setCurPage(index);
+        pager.current?.scrollTo({ x: index * size.width, animated: false });
+    }, [size.width, pageCount]);
    
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}
+        <ScrollView style={styles.container} onLayout={({ nativeEvent: { layout } }) =>
+            setSize({ width: layout.width, height: layout.height })} contentContainerStyle={styles.content}
             nestedScrollEnabled alwaysBounceVertical showsVerticalScrollIndicator={false}
             refreshControl={<RefreshControl refreshing={isLoading && Object.keys(summaries).length > 0}
                 onRefresh={getSummaries} tintColor={colors.highlight} colors={[colors.highlight]} />}>
@@ -25,14 +38,14 @@ export default function Body() {
                 accessibilityLabel="뉴스를 불러오는 중" accessibilityState={{ busy: true }}>
                 <ActivityIndicator size="large" color={colors.highlight} />
             </View>
-        ) : (
-        <ScrollView
+        ) : size.width > 0 && size.height > 0 ? (
+        <ScrollView ref={pager}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         bounces={true}
         onMomentumScrollEnd={handlePageScroll}>
-            {feed.map((personaId, idx) => {
+            {pages.map((personaId, idx) => {
                 const session = summaries[personaId];
                 if (!session) return null;
 
@@ -41,11 +54,13 @@ export default function Body() {
                         key={personaId}
                         session={session}
                         idx={idx}
+                        width={size.width}
+                        height={size.height}
                     />
                 );
             })}
         </ScrollView>
-        )}
+        ) : null}
         </ScrollView>
     )
 }

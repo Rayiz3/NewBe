@@ -1,16 +1,9 @@
-import { screen } from "@/constants/sizes";
+
 import { useEffect, useRef } from "react";
-import { PanResponder, PanResponderInstance, View } from "react-native";
+import { PanResponder, PanResponderInstance, View, useWindowDimensions } from "react-native";
 import { create } from "zustand";
 
 type dragSourceType = 'feed' | 'persona' | null;
-
-interface personaType {
-    id: string;
-    category: string;
-    name: string;
-    description: string;
-}
 
 interface posType {
     x: number;
@@ -23,6 +16,8 @@ interface zoneType extends posType {
 }
 
 interface PersonaProps {
+    layoutVersion: number;
+    refreshLayout: () => void;
     feed: string[]
     setFeed: (v: string[]) => void
     addFeed: (v: string) => void
@@ -55,6 +50,8 @@ interface PersonaProps {
 }
 
 export const usePersonaStore = create<PersonaProps>((set, get) => ({
+    layoutVersion: 0,
+    refreshLayout: () => set(s => ({ layoutVersion: s.layoutVersion + 1 })),
     feed: ['GOO_NATION_1', 'GOO_BUSINESS_1', 'GOO_SCIENCE_1', 'GOO_TECHNOLOGY_1', 'GOO_ENTERTAINMENT_1', 'GOO_SPORTS_1', 'GOO_WORLD_1'],
     setFeed: (v) => set({ feed: v }),
     addFeed: (v) => set(state => {
@@ -97,7 +94,7 @@ export const usePersonaStore = create<PersonaProps>((set, get) => ({
     isDragging: null,
     setIsDragging: (v) => set({ isDragging: v }),
 
-    drag: {x: screen.width / 2, y: screen.height / 2},
+    drag: {x: 0, y: 0},
     setDrag: (x = get().drag.x, y = get().drag.y) => set((state) => ({ drag: { ...state.drag, x, y } })),
 
     getPanResponder: () => PanResponder.create({
@@ -185,6 +182,8 @@ export const usePersonaStore = create<PersonaProps>((set, get) => ({
 // Native view refs remain in hooks; persona state stays in the store.
 export function usePersonaToken(personaId: string, location: 'feed' | 'persona', index: number) {
     const tokenRef = useRef<View>(null);
+    const { width, height } = useWindowDimensions();
+    const layoutVersion = usePersonaStore(s => s.layoutVersion);
     const feed = usePersonaStore(s => s.feed);
     const curPersona = usePersonaStore(s => s.curPersona);
     useEffect(() => {
@@ -193,7 +192,7 @@ export function usePersonaToken(personaId: string, location: 'feed' | 'persona',
                 usePersonaStore.getState().setFeedPosX(x + width / 2, index);
             });
         }
-    }, [feed, location, index]);
+    }, [feed, location, index, width, height, layoutVersion]);
     const select = () => {
         usePersonaStore.getState().setCurPersona(personaId);
         tokenRef.current?.measureInWindow((x, y, width, height) => {
@@ -206,6 +205,8 @@ export function usePersonaToken(personaId: string, location: 'feed' | 'persona',
 
 export function usePersonaDropZone(location: 'feed' | 'persona') {
     const cardContainerRef = useRef<View>(null);
+    const { width, height } = useWindowDimensions();
+    const layoutVersion = usePersonaStore(s => s.layoutVersion);
     const measureDropZone = () => {
         cardContainerRef.current?.measureInWindow((x, y, width, height) => {
             const state = usePersonaStore.getState();
@@ -222,6 +223,23 @@ export function usePersonaDropZone(location: 'feed' | 'persona') {
             });
         });
         return () => cancelAnimationFrame(frame);
-    }, [location]);
+    }, [location, width, height, layoutVersion]);
     return { cardContainerRef, measureDropZone };
+}
+
+// Button alternatives keep editing usable when both drag zones cannot fit on screen.
+export function moveSelectedPersona(direction: -1 | 1) {
+    const state = usePersonaStore.getState();
+    const index = state.feed.indexOf(state.curPersona);
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= state.feed.length) return;
+    const feed = [...state.feed];
+    [feed[index], feed[target]] = [feed[target], feed[index]];
+    state.setFeed(feed);
+}
+
+export function toggleSelectedPersona() {
+    const state = usePersonaStore.getState();
+    if (state.feed.includes(state.curPersona)) state.removeFeed(state.curPersona);
+    else if (state.feed.length < 7) state.addFeed(state.curPersona);
 }

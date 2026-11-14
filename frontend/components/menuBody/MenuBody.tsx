@@ -50,6 +50,8 @@ const styles = StyleSheet.create({
     },
     content: {
         flexGrow: 1,
+        width: "100%",
+        alignSelf: "center",
     },
     menu: {
         flexDirection: 'column',
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
     hero: {
         width: "100%",
         aspectRatio: 1,
+        alignSelf: "center",
         flexShrink: 0,
         marginTop: 'auto',
         overflow: 'hidden',
